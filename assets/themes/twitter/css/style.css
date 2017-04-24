@@ -139,7 +139,3 @@
 code, pre {
     font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
-
-.navbar .nav>li>a {
-    padding: 5px 10px 5px;
-}
