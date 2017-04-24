@@ -19,7 +19,7 @@ tags: [misc]
 
 ### テーマの変更
 色々見たが、最初から入っているTwitterテーマを使うことにした。
-`~/masatoi.github.io/assets/themes/twitter/css/style.css`をいじると反映されるので、[pygentsのテーマ](http://jwarby.github.io/jekyll-pygments-themes/languages/javascript.html)から適当なものを選んで叩き台にする。
+`~/masatoi.github.io/assets/themes/twitter/css/style.css`をいじると反映される。シンタックスハイライトのCSSスタイルは[pygentsのテーマ](http://jwarby.github.io/jekyll-pygments-themes/languages/javascript.html)から適当なものを選んで叩き台にする。
 
 なお、highlighterはrougeでないとコミットしたときにgithubからお叱りのメールが来る。
 
@@ -49,9 +49,18 @@ Emacsのpackageからmarkdown-modeを入れる。これでmarkdownのシンタ�
         collect (sumup3 count))
   (print "common lisp end."))
 ```
+`defun`や`loop`も組み込みマクロと同列に表示されてしまうのがかなり納得いかないのだが、とりあえずそれらしくなったからよしとする。
 
-```ruby
-def foo
-  puts 'foo'
-end
-```
+### コメントシステム
+コメントにはDisqusを使えるが、なんか重くなるしそもそもはてなダイアリー時代にもコメントがついたことなんてほとんどないので無しでいこうと思う。はてなブックマークへの誘導を用意すれば一応コメントも残せるはず。
+
+### インラインHTMLのテスト
+
+<blockquote class="twitter-tweet" data-lang="ja"><p lang="ja" dir="ltr">はてなダイアリーがChromeであまりに遅いので測ってみたら無い関数でreadyの判定をやってて毎回タイムアウトまで待っているっぽいことが分かった。Ten.jsとHatenaStar.jsに同じ箇所があるが2012年からまったく更新されていないのでもう他に移れってことなんだろうな <a href="https://t.co/LO1GMifYZX">pic.twitter.com/LO1GMifYZX</a></p>&mdash; Satoshi Imai (@masatoi0) <a href="https://twitter.com/masatoi0/status/856122778340044802">2017年4月23日</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+### 画像のテスト
+
+![alt text](http://localhost:4000/images/renzuru-symbol-twitter-icon.jpg)
+
+画像に限らず、サイトのディレクトリ直下にファイルを置いておけばURLから普通に参照できるようだ。
