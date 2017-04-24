@@ -61,6 +61,6 @@ Emacsのpackageからmarkdown-modeを入れる。これでmarkdownのシンタ�
 
 ### 画像のテスト
 
-![alt text](http://localhost:4000/images/renzuru-symbol-twitter-icon.jpg)
+![alt text](https://masatoi.github.io/images/renzuru-symbol-twitter-icon.jpg)
 
 画像に限らず、サイトのディレクトリ直下にファイルを置いておけばURLから普通に参照できるようだ。
