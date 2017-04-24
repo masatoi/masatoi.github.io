@@ -7,11 +7,24 @@ tags: [misc]
 ---
 {% include JB/setup %}
 
-### はてなダイアリーからの移行
-はてなははてなダイアリーからはてなブログへ移行することを推奨しているが、自分ははてなダイアリーで十分だと思って放りっぱなしにしていた。
-だが最近Chromeではてなダイアリーにアクセスすると異常に遅いことに気付き、どうもメンテナンスされていないJavascriptが原因っぽいので、そろそろ他のブログシステムに移行した方がいいと思うようになった。
+## はてなダイアリーからの移行
+はてなははてなダイアリーからはてなブログへ移行することを推奨しているのだが、これまでは移行するメリットを見出せず放りっぱなしにしていた。
+しかし最近Chromeではてなダイアリーにアクセスすると異常に遅いことに気付いた。どうもメンテナンスされていないJavascriptが原因っぽい。それでいい加減に他のブログシステムに移行した方がいいと思うようになった。
 
-日々のメモはEmacsのorg-modeで取っているので、できればorg-modeで編集できた方がいいのだが、pandocなどでorg-modeからmarkdownに変換する方法もあるので、メジャーな方法、つまりJekyll+Github pagesでいくことにした。
+日々のメモはEmacsのorg-modeで取っているので、できればブログもorg-modeで編集できた方がいいのだが、pandocなどでorg-modeからmarkdownに変換する方法もあるということなので、メジャーな方法、Jekyll bootstrap+Github pagesでいくことにした。これだとレスポンスも速いし情報源もたくさんある。
+
+まずやったことはrbenvのインストール、最新のrubyをインストール (ruby2以降でないとJekyllがインストールできないので)。それからgithubでブログサイトのレポジトリをつくった。基本的には[ここ(Jekyll QuickStart)](http://jekyllbootstrap.com/usage/jekyll-quick-start.html)のサイト名の部分だけを差し替えて実行すればいい。
+
+それから_config.ymlをいじってサイト情報を書き込んだりシンタックスハイライトを有効化したりする。
+
+### テーマの変更
+色々見たが、最初から入っているTwitterテーマを使うことにした。
+`~/masatoi.github.io/assets/themes/twitter/css/style.css`をいじると反映されるので、[pygentsのテーマ](http://jwarby.github.io/jekyll-pygments-themes/languages/javascript.html)から適当なものを選んで叩き台にする。
+
+なお、highlighterはrougeでないとコミットしたときにgithubからお叱りのメールが来る。
+
+### markdown-modeのインストール
+Emacsのpackageからmarkdown-modeを入れる。これでmarkdownのシンタックスハイライトとC-c C-c pでEmacs規定のブラウザでプレビューができる。もっとも、Jekyll serveでファイルの変更を監視していればmdファイルを保存した段階で`localhost:4000`でプレビューが見られる。
 
 ### コードのテスト
 ```common_lisp
