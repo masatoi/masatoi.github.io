@@ -1,7 +1,7 @@
 /* Custom container */
 .container-narrow {
   margin: 0 auto;
-  max-width: 700px; }
+  max-width: 900px; }
 
 .container-narrow > hr {
   margin: 30px 0; }
@@ -135,3 +135,11 @@
 .highlight .vg { color: #000000 } /* Name.Variable.Global */
 .highlight .vi { color: #000000 } /* Name.Variable.Instance */
 .highlight .il { color: #0000cf; font-weight: normal } /* Literal.Number.Integer.Long */
+
+code, pre {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+.navbar .nav>li>a {
+    padding: 5px 10px 5px;
+}
