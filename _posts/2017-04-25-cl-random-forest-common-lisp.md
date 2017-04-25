@@ -21,7 +21,7 @@ tags: [lisp,machine-learning]
 
 ランダムフォレストは分類だけでなく回帰にも使えるのだが、今のところ実装してるのは分類だけだ。
 
-### 論文: Global Refinement of Random Forest
+# 論文: Global Refinement of Random Forest
 
 単に普通のランダムフォレストを実装するだけでは面白くないので、加えて次の論文のアルゴリズムを実装している。
 
@@ -64,7 +64,7 @@ roswellの場合は
 ros -Q dynamic-space-size=4096 run
 ```
 
-### データの用意
+# データの用意
 データセットは教師信号を表わす一次元fixnum配列と、データ本体を表わす二次元double-float配列からなる。このデータ行列における行が一つのデータに対応する。例えば、以下の図のような2次元4クラスのデータであれば、データセットのフォーマットはこうなる。教師信号(クラスID)は0スタートの整数であることに注意する。
 
 ![clrf-dataset.png](/images/clrf-dataset.png)
@@ -90,7 +90,7 @@ ros -Q dynamic-space-size=4096 run
                                   (1.0d0 1.0d0))))
 ```
 
-### 決定木を作る
+# 決定木を作る
 まずデータセットから一本の決定木を作ってみる。
 
 ```cl
@@ -116,7 +116,7 @@ ros -Q dynamic-space-size=4096 run
 
 決定木は単なる構造体で、`make-dtree`関数で構築できる(決定木を構築した時点で学習は終わっている)。次に、`predict-dtree`関数で訓練に使ったデータセットの最初の行を入力にして、予測されるクラス番号を返している。この例では0が返っているが、`*target*`の最初の要素も0なので正解していることになる。データセット全体に対するテストは`test-dtree`関数で行う。これは正答率、正答数、テストデータの数を多値で返す。
 
-### ランダムフォレストを作る
+# ランダムフォレストを作る
 
 次に決定木の集合体であるランダムフォレストを作ってみる。
 
@@ -141,7 +141,7 @@ ros -Q dynamic-space-size=4096 run
 バギングとは元のデータセットからブートストラップサンプリング(重複を許すランダムサンプリング)して小さなデータセットを決定木ごとに作り、それを使って各決定木を学習することをいう。バギングによって決定木の多様性が増すことによって全体としての頑健性が増す。
 決定木と同様に、予測・テストにはそれぞれ`predict-forest`関数、`test-forest`関数を使う。
 
-### Global refinement
+# Global refinement
 
 ここまでは通常のランダムフォレストの話だったが、ここからランダムフォレスト全体の情報を使っての再学習の話になる。
 
@@ -189,7 +189,7 @@ ros -Q dynamic-space-size=4096 run
  (clrf:predict-refine-learner *forest* *forest-refine-learner* *datamatrix* 0)
 ```
 
-### Global pruning
+# Global pruning
 さて、Global refinementの学習結果を利用して、重要度の小さい葉ノードを刈り込むことができる(pruning)。例えば、あるランダムフォレストから全体の10%の葉ノードを削除したい場合は以下のようにする。
 
 ```cl
@@ -219,7 +219,7 @@ ros -Q dynamic-space-size=4096 run
 
 今のところSBCL以外だと並列化はちゃんと動かないかも。
 
-### MNISTの例
+# MNISTの例
 もうちょっと実際的な例として、MNISTでやってみた例がここにある。
 
 - [mnist.lisp](https://github.com/masatoi/cl-random-forest/blob/master/example/mnist.lisp){:target="_blank"}
@@ -230,7 +230,7 @@ ros -Q dynamic-space-size=4096 run
 
 ![clrf-mnist-pruning.png](/images/clrf-mnist-pruning.png)
 
-### ベンチマーク
+# ベンチマーク
 
 有名なランダムフォレストの実装と比較してみる。比較に使ったのはPythonのパッケージscikit-learnとRのパッケージrenger。それぞれ本体部分はCythonC++で実装されていて、並列化対応であり、速いとされている。
 
@@ -260,7 +260,7 @@ covtypeは訓練データとテストデータが分かれていないので、�
 |covtype | 94.89%, 263.7sec | 83.95%, 139.0sec | 96.01%, 103.9sec |
 |usps | 93,47%, 3.583sec | 93.57%, 11.70sec | 94.96%, 0.686sec |
 
-### まとめ
+# まとめ
 - Common Lispでランダムフォレストの実装cl-random-forestをつくった
 - 論文「Global Refinement of Random Forest」のアルゴリズムを実装した
 - 有名なランダムフォレストの実装と比較した。速度でも精度でも勝っている

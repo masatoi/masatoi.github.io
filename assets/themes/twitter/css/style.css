@@ -136,6 +136,30 @@
 .highlight .vi { color: #000000 } /* Name.Variable.Instance */
 .highlight .il { color: #0000cf; font-weight: normal } /* Literal.Number.Integer.Long */
 
+.page-header h1{
+    font-size: 24px;
+}
+
+h1 {
+    font-size: 24px;
+    line-height: 30px;
+}
+
+h2 {
+    font-size: 20px;
+    line-height: 30px;
+}
+
+h3 {
+    font-size: 18px;
+    line-height: 30px;
+}
+
+h4 {
+    font-size: 16px;
+    line-height: 30px;
+}
+
 code, pre {
     font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
