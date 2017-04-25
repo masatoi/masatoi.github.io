@@ -252,7 +252,7 @@ ros -Q dynamic-space-size=4096 run
 
 cl-random-forestはランダムフォレストの構築とGlobal refinementまでを行なう(枝刈りはしない)。
 
-データは![LIBSVMのサイト](https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/){:target="_blank"}にあるデータセットを使う。
+データは[LIBSVMのサイト](https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/){:target="_blank"}にあるデータセットを使う。
 
 |    | \#Train | \#Test | \#Feature | \#Classes |
 | ---- | :----------:| |:--------:| |:--------:| :-----:|
