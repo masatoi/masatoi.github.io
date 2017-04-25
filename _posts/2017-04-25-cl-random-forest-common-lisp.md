@@ -242,8 +242,8 @@ ros -Q dynamic-space-size=4096 run
 
 有名なランダムフォレストの実装と比較してみる。比較に使ったのはPythonのパッケージscikit-learnとRのパッケージranger。それぞれ本体部分はCythonとC++で実装されていて、並列化にも対応しており、速いとされている。
 
-- [ranger: A Fast Implementation of Random Forests](https://github.com/imbs-hl/ranger){:target="_blank"}
 - [Accelerating Random Forests in Scikit-Learn (PDF)](https://orbi.ulg.ac.be/bitstream/2268/171887/1/slides.pdf){:target="_blank"}
+- [ranger: A Fast Implementation of Random Forests](https://github.com/imbs-hl/ranger){:target="_blank"}
 
 推奨設定での精度と所要時間
 - scikit-learn: n-tree=100、他はデフォルト
