@@ -240,7 +240,7 @@ ros -Q dynamic-space-size=4096 run
 
 # ベンチマーク
 
-有名なランダムフォレストの実装と比較してみる。比較に使ったのはPythonのパッケージscikit-learnとRのパッケージrenger。それぞれ本体部分はCythonC++で実装されていて、並列化対応であり、速いとされている。
+有名なランダムフォレストの実装と比較してみる。比較に使ったのはPythonのパッケージscikit-learnとRのパッケージranger。それぞれ本体部分はCythonとC++で実装されていて、並列化にも対応しており、速いとされている。
 
 - [ranger: A Fast Implementation of Random Forests](https://github.com/imbs-hl/ranger){:target="_blank"}
 - [Accelerating Random Forests in Scikit-Learn (PDF)](https://orbi.ulg.ac.be/bitstream/2268/171887/1/slides.pdf){:target="_blank"}
@@ -248,9 +248,11 @@ ros -Q dynamic-space-size=4096 run
 推奨設定での精度と所要時間
 - scikit-learn: n-tree=100、他はデフォルト
 - ranger: 全部デフォルト
-- cl-random-forest: n-tree=500, bagging-ratio=0.1, max-depth=15, n-trial=sqrt(dim)
+- cl-random-forest: n-tree=500, bagging-ratio=0.1, max-depth=15, n-trial=特徴数の平方根
 
-データはLIBSVMのサイトにあるデータセットを使う。
+cl-random-forestはランダムフォレストの構築とGlobal refinementまでを行なう(枝刈りはしない)。
+
+データは![LIBSVMのサイト](https://www.csie.ntu.edu.tw/~cjlin/libsvmtools/datasets/){:target="_blank"}にあるデータセットを使う。
 
 |    | \#Train | \#Test | \#Feature | \#Classes |
 | ---- | :----------:| |:--------:| |:--------:| :-----:|
@@ -260,6 +262,8 @@ ros -Q dynamic-space-size=4096 run
 |usps | 7291 | 2007 | 256 | 10 |
 
 covtypeは訓練データとテストデータが分かれていないので、全体をシャッフルしてから上の表にあるデータ数で分割した。
+
+結果は以下の表のようになる。ほとんどの場合でcl-random-forestの方が速く、精度も良いことが分かった。
 
 |    | scikit-learn | ranger | cl-random-forest |
 | ------------- | :-------------:| | :-------------:| :-----:|
