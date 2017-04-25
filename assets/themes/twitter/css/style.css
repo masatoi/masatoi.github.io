@@ -160,22 +160,8 @@ h4 {
     line-height: 30px;
 }
 
-/* code, pre { */
-/*     font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; */
-/* } */
-
-@media only screen and (min-width: 320px) {
-    code, pre {
-        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-    }
-}
-
-@media only screen and (max-width: 320px) {
-    code, pre {
-        /* font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; */
-        font-family: monospace;
-        font-size: 10%;
-    }
+code, pre {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
 
 .navbar .nav>li>a {
