@@ -3,11 +3,11 @@ layout: post
 title: "cl-random-forest: Common Lispで高性能なランダムフォレストを実装した"
 description: ""
 category: 
-tags: []
+tags: [lisp,machine-learning]
 ---
 {% include JB/setup %}
 
-前の記事でCLMLのランダムフォレストを試したのだが、計算速度が遅くてとても実用レベルとは言えなかったので一から書き直すことにした。また先月のShibuya.lispのLispmeetupでも発表してきた。何をやっているかはこの発表のスライドで大体説明しているのだが、実際の使い方はデモでしか説明していなかったのでこの記事で説明する。
+[前の記事でCLMLのランダムフォレストを試した](http://d.hatena.ne.jp/masatoi/20170213/1486984568){:target="_blank"}のだが、計算速度が遅くてとても実用レベルとは言えなかったので一から書き直すことにした。また先月のShibuya.lispのLispmeetupでも発表してきた。何をやっているかはこの発表のスライドで大体説明しているのだが、実際の使い方はデモでしか説明していなかったのでこの記事で説明する。
 
 -   [cl-random-forest(Github)](https://github.com/masatoi/cl-random-forest){:target="_blank"}
 -   [Lispmeetup \#50 cl-random-forest: Common Lispによるランダムフォレストの実装(SlideShare)](https://www.slideshare.net/masatoi0/lispmeetup-50-clrandomforest-common-lisp){:target="_blank"}
