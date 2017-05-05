@@ -7,6 +7,10 @@ tags: [lisp,machine-learning]
 ---
 {% include JB/setup %}
 
+* TOC
+{:toc}
+
+# はじめに
 [前の記事でCLMLのランダムフォレストを試した](http://d.hatena.ne.jp/masatoi/20170213/1486984568){:target="_blank"}のだが、計算速度が遅くてとても実用レベルとは言えなかったので一から書き直すことにした。また先月のShibuya.lispのLispmeetupでも発表してきた。何をやっているかはこの発表のスライドで大体説明しているのだが、実際の使い方はデモでしか説明していなかったのでこの記事で説明する。
 
 -   [cl-random-forest(Github)](https://github.com/masatoi/cl-random-forest){:target="_blank"}
@@ -21,7 +25,7 @@ tags: [lisp,machine-learning]
 
 ランダムフォレストは分類だけでなく回帰にも使えるのだが、今のところ実装してるのは分類だけ。
 
-# 論文: Global Refinement of Random Forest
+## 論文: Global Refinement of Random Forest
 
 単に普通のランダムフォレストを実装するだけでは面白くないので、加えて次の論文のアルゴリズムを実装している。
 
@@ -66,7 +70,8 @@ roswellの場合は
 ros -Q dynamic-space-size=4096 run
 ```
 
-# データの用意
+# 使い方
+## データの用意
 データセットは教師信号を表わす一次元fixnum配列と、データ本体を表わす二次元double-float配列からなる。このデータ行列における行が一つのデータに対応する。例えば、以下の図のような2次元4クラスのデータであれば、データセットのフォーマットはこうなる。教師信号(クラスID)は0スタートの整数であることに注意する。
 
 ![clrf-dataset.png](/images/clrf-dataset.png)
@@ -92,7 +97,7 @@ ros -Q dynamic-space-size=4096 run
                                   (1.0d0 1.0d0))))
 ```
 
-# 決定木を作る
+## 決定木を作る
 まずデータセットから一本の決定木を作ってみる。
 
 ```cl
@@ -118,7 +123,7 @@ ros -Q dynamic-space-size=4096 run
 
 決定木は単なる構造体で、`make-dtree`関数で構築できる(決定木を構築した時点で学習は終わっている)。次に、`predict-dtree`関数で訓練に使ったデータセットの最初の行を入力にして、予測されるクラス番号を返している。この例では0が返っているが、`*target*`の最初の要素も0なので正解していることになる。データセット全体に対するテストは`test-dtree`関数で行う。これは正答率、正答数、テストデータの数を多値で返す。
 
-# ランダムフォレストを作る
+## ランダムフォレストを作る
 
 次に決定木の集合体であるランダムフォレストを作ってみる。
 
@@ -145,7 +150,7 @@ ros -Q dynamic-space-size=4096 run
 
 決定木と同様に、予測・テストにはそれぞれ`predict-forest`関数、`test-forest`関数を使う。
 
-# Global refinement
+## Global refinement
 
 ここまでは通常のランダムフォレストの話だったが、ここからランダムフォレスト全体の情報を使っての再学習の話になる。
 
@@ -195,7 +200,7 @@ ros -Q dynamic-space-size=4096 run
  (clrf:predict-refine-learner *forest* *forest-refine-learner* *datamatrix* 0)
 ```
 
-# Global pruning
+## Global pruning
 さて、Global refinementの学習結果を利用して、重要度の小さい葉ノードを刈り込むことができる(pruning)。例えば、あるランダムフォレストから全体の10%の葉ノードを削除したい場合は以下のようにする。
 
 ```cl
@@ -211,7 +216,7 @@ ros -Q dynamic-space-size=4096 run
 
 `pruning!`関数を呼ぶことで`*forest*`が破壊的に変更される。枝刈りした後は線形分類器の再学習が必要になる。このランダムフォレストの枝刈り→線形分類器の再学習を繰り返していくことで、モデルがコンパクトになっていく。
 
-# 並列化
+## 並列化
 ランダムフォレストの中の決定木は互いに独立しているので、簡単に並列化することができ、その並列化粒度も大きい。ランダムフォレストの構築`make-forest`、Global refinement用データへの変換`make-refine-dataset`は並列化することによってかなりの高速化が期待できる。
 
 またマルチクラス分類の場合、Global refinement時の線形分類器は二値分類器をクラス数だけ用意して学習することになる。この二値分類器のセットも独立した計算なので並列化することができる。`train-refine-learner`、`test-refine-learner`、`train-refine-learner-process`は並列化が効く。
@@ -227,7 +232,7 @@ ros -Q dynamic-space-size=4096 run
 
 今のところSBCL以外だと並列化はちゃんと動かないかも。
 
-# MNISTの例
+## MNISTの例
 もうちょっと実際的な例として、MNISTでやってみた例がここにある。
 
 - [mnist.lisp](https://github.com/masatoi/cl-random-forest/blob/master/example/mnist.lisp){:target="_blank"}
