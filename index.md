@@ -1,7 +1,7 @@
 ---
 layout: page
-title: masatoi.github.io/Index
-tagline: 
+title: masatoi.github.io
+tagline: Index
 ---
 {% include JB/setup %}
 
