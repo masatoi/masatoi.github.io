@@ -233,10 +233,10 @@ ifでは評価される部分に式が一つしか書けないので、複数の
 (require [hy.contrib.loop [loop]])
 
 (defn fact3 [n]
-  (loop [[i n] [acc 1]]
-        (if (zero? i)
+  (loop [[cnt 1] [acc 1]]
+        (if (= cnt n)
           acc
-          (recur (dec i) (* acc i)))))
+          (recur (inc cnt) (* acc cnt)))))
 
 (fact3 1000) ; => 4023872600770937735437024339 ...
 ```
