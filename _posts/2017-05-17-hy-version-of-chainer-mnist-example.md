@@ -7,6 +7,15 @@ tags: [lisp,hylang,python]
 ---
 {% include JB/setup %}
 
+前回Hyのチュートリアルをやってみたので、今度は[Chainerのサンプルコード](https://github.com/pfnet/chainer/blob/master/examples/mnist/train_mnist.py){:target="_blank"}をHyに翻訳してみる。
+
+ほとんど逐語訳で済むが、注意点としては、
+
+- アンダーバーはハイフンに直す
+- オブジェクトの属性はそのまま`obj.attr`でアクセスできる
+- メソッド呼び出しは`(obj.method arg1 arg2)`でも`(.method obj arg1 arg2)`でもよい
+- Hyでの多重代入(分配束縛)のやりかたはよく分からなかった。マクロを書けば作れる
+
 # コード
 ``` clojure
 ;; -*- coding:utf-8; mode:hy -*-
