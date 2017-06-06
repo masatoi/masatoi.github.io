@@ -7,10 +7,10 @@ tags: [lisp,machine-learning]
 ---
 {% include JB/setup %}
 
-[cl-random-forest](https://github.com/masatoi/cl-random-forest){:target="_blank"}では通常のランダムフォレストに加えて、ランダムフォレストの構造を使って特徴抽出し、それを線形分類器で再学習するという手法を実装している。(Global refinement)
+[cl-random-forest](https://github.com/masatoi/cl-random-forest){:target="_blank"}では通常のランダムフォレストに加えて、ランダムフォレストの構造を使って特徴抽出し、それを線形分類器で再学習するという手法を実装している(Global refinement of random forest)。
 通常のランダムフォレストに対して、この手法がどういう分類をしているかを見るために、二次元のデータでの実際の分類結果を可視化してみる。
 
-- [パッケージユーザーのための機械学習(5)：ランダムフォレスト](http://tjo.hatenablog.com/entry/2013/12/24/190000){:target="_blank"}
+- [参考: パッケージユーザーのための機械学習(5)：ランダムフォレスト](http://tjo.hatenablog.com/entry/2013/12/24/190000){:target="_blank"}
 
 このエントリではXORのデータで、[綺麗に分かれている場合](https://github.com/ozt-ca/tjo.hatenablog.samples/blob/master/r_samples/public_lib/jp/xor_simple.txt){:target="_blank"}と[かなりオーバーラップしている場合](https://github.com/ozt-ca/tjo.hatenablog.samples/blob/master/r_samples/public_lib/jp/xor_complex.txt){:target="_blank"} とでランダムフォレストの決定境界を描いている。データはそれぞれのリンク先にある。
 
