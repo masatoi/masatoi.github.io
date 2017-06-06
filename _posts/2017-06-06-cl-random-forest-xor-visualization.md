@@ -7,8 +7,8 @@ tags: [lisp,machine-learning]
 ---
 {% include JB/setup %}
 
-[cl-random-forest](https://github.com/masatoi/cl-random-forest){:target="_blank"}では通常のランダムフォレストに加えて、ランダムフォレストの構造を使って特徴抽出し、それを線形分類器で再学習するという手法を実装している。
-通常のランダムフォレストに対して、この手法がどういう分類をしているかを見るために、二次元のデータでの実際の分類結果を可視化してみたい。
+[cl-random-forest](https://github.com/masatoi/cl-random-forest){:target="_blank"}では通常のランダムフォレストに加えて、ランダムフォレストの構造を使って特徴抽出し、それを線形分類器で再学習するという手法を実装している。(Global refinement)
+通常のランダムフォレストに対して、この手法がどういう分類をしているかを見るために、二次元のデータでの実際の分類結果を可視化してみる。
 
 - [パッケージユーザーのための機械学習(5)：ランダムフォレスト](http://tjo.hatenablog.com/entry/2013/12/24/190000){:target="_blank"}
 
