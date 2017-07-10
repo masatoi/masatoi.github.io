@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "JuliaのランダムフォレストライブラリでMNISTの分類をやってみる"
+title: "JuliaのランダムフォレストライブラリDecisionTree.jlでMNIST"
 description: ""
 category: 
 tags: [julia,machine-learning]
@@ -8,6 +8,8 @@ tags: [julia,machine-learning]
 {% include JB/setup %}
 
 Juliaが速くて機械学習分野で人気と聞いたので試してみた。ランダムフォレストの実装があったのでこれでMNISTデータの分類を試してみる。
+
+- [DecisionTree.jl (github)](https://github.com/bensadeghi/DecisionTree.jl){:target="_blank"}
 
 # インストール
 
