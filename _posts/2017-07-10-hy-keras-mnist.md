@@ -3,7 +3,7 @@ layout: post
 title: "HyからKerasを利用してMNISTを分類する"
 description: ""
 category: 
-tags: [hy,keras,machine-learning]
+tags: [lisp,hy,keras,machine-learning]
 ---
 {% include JB/setup %}
 
