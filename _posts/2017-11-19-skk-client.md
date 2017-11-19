@@ -12,16 +12,13 @@ SKKサーバとの通信プロトコルはとても簡単なので、ソケッ�
 
 ### SKKサーバのプロトコル
 
-これは今使ってるSKKサーバの一つdbskkd-cdbのプロトコル
-https://github.com/jj1bdx/dbskkd-cdb/blob/master/skk-server-protocol.md
-
-これはPySocialSKKServのページにあったプロトコル
-https://ja.osdn.net/projects/pysocialskkserv/wiki/SKKServ
+- [これは今使ってるSKKサーバの一つdbskkd-cdbのプロトコル](https://github.com/jj1bdx/dbskkd-cdb/blob/master/skk-server-protocol.md){:target="_blank"}
+- [これはPySocialSKKServのページにあったプロトコル](https://ja.osdn.net/projects/pysocialskkserv/wiki/SKKServ){:target="_blank"}
 
 telnetからSKKサーバにつないで実験することもできる。ただしSKKサーバの文字コードはEUC-JPなので、ターミナルを設定しておかないと文字化けする。
 ```
 % telnet localhost skkserv
-1a 
+1a  # aの後にスペース
 1/α/エー/エイ/アー/а/ア/
 ```
 
@@ -46,6 +43,8 @@ Common Lispからポータブルにソケットを叩くライブラリとして
 ```
 
 SKKサーバの文字コードがEUC-JPなので、ソケットのストリームからそのままreadなどで読み込むことはできない。バイト列として読み書きするために、`:element-type`キーワードでオクテットを指定して`socket-connect`を呼び出している。
+
+
 読み書きにも注意が必要で、書き出しのときは`babel:string-to-octets`でEUC-JPエンコーディングした文字列のバイト列を1文字ずつ`write-byte`で書き出す。
 読み出し時は改行コードが来るまで`read-byte`を繰り返し、得られたEUC-JPのバイト列を`babel:octets-to-string`で処理系で扱える文字列に変換する。SKKサーバはバージョン問合せのときなど改行コードを付けないものを返してくることもあるので、readが待ち状態になってしまって処理が止まってしまったときのためにタイムアウト処理を用意しておく。
 
