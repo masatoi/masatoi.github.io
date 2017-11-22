@@ -49,7 +49,7 @@ Evaluation took:
   100.00% CPU
   15,958,045,410 processor cycles
   0 bytes consed
-  
+
 11
 ```
 
@@ -57,38 +57,51 @@ Evaluation took:
 
 ```common_lisp
 ;; ゴチャァ…
-(locally (declare (ftype (function (fixnum fixnum fixnum) fixnum) tak))
-  (defun tak (x y z)
-    (declare (optimize (speed 3) (safety 0) (debug 0))
-             (type fixnum x y z))
-    (if (<= x y)
-        z
-        (tak (tak (1- x) y z)
-             (tak (1- y) z x)
-             (tak (1- z) x y)))))
+(declaim (ftype (function (fixnum fixnum fixnum) fixnum) tak))
+(defun tak (x y z)
+  (declare (optimize (speed 3) (safety 0) (debug 0))
+           (type fixnum x y z))
+  (if (<= x y)
+      z
+      (tak (tak (1- x) y z)
+           (tak (1- y) z x)
+           (tak (1- z) x y))))
 ```
 
 ```
 CL-USER> (time (tak 22 11 0))
 Evaluation took:
-  1.313 seconds of real time
-  1.312000 seconds of total run time (1.312000 user, 0.000000 system)
-  99.92% CPU
-  4,453,962,162 processor cycles
+  1.270 seconds of real time
+  1.272000 seconds of total run time (1.272000 user, 0.000000 system)
+  100.16% CPU
+  4,306,485,116 processor cycles
   0 bytes consed
-  
+
 11
+```
+
+<strong>追記</strong>
+最初 `(locally (declare (ftype ...)))` でdefunを包んでいたのだけど、それだと関数の型宣言のスコープ的に効かないという指摘をもらったのでdeclaimに変更。ちゃんと関数型が宣言されているかどうかはSBCLの場合はdescribeで分かる。
+
+```
+CL-USER> (describe #'tak)
+#<FUNCTION TAK>
+  [compiled function]
+
+
+Lambda-list: ()
+Declared type: (FUNCTION (FIXNUM FIXNUM FIXNUM) (VALUES FIXNUM &REST T))
+Derived type: FUNCTION
 ```
 
 ### 型付きのdefun
 
-速くはなったものの、declareが増えてごちゃごちゃしている。その点Juliaは仮引数に::Intなどを付けるだけなのですっきりしている。これを真似して型付きの関数定義`defnt`を定義する。
+速くはなったものの、declaimやdeclareが増えてごちゃごちゃしている。その点Juliaは仮引数に::Intなどを付けるだけなのですっきりしている。これを真似して型付きの関数定義`defnt`を定義する。
 
 ```common_lisp
 (defmacro defnt (function-spec (&rest arg-specs) &body body)
-  `(locally
-       (declare (ftype (function ,(mapcar #'cadr arg-specs) ,(cadr function-spec))
-                       ,(car function-spec)))
+  `(progn
+     (declaim (ftype (function ,(mapcar #'cadr arg-specs) ,(cadr function-spec)) ,(car function-spec)))
      (defun ,(car function-spec) ,(mapcar #'car arg-specs)
        (declare (optimize (speed 3) (safety 0) (debug 0))
                 ,@(mapcar (lambda (arg arg-type)
