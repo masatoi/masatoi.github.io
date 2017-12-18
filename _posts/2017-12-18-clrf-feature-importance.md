@@ -243,3 +243,49 @@ importances = clf.feature_importances_
 #         0.12585869,  0.06974428,  0.04656888,  0.01267463,  0.01457374,
 #         0.10987419,  0.03547976,  0.08083613,  0.0154129 ])
 ```
+### メモ: 上の図の作り方
+
+X軸の目盛りに文字列を表示するのに手間取ったのでメモしておく。
+
+[clgplot](https://github.com/masatoi/clgplot){:target="_blank"}という自作のGnuplotのフロントエンドを使っている。
+
+```common_lisp
+(ql:quickload :clgplot)
+
+(clgp:plots
+ (list #(0.06574301 0.02194477 0.0051479316 0.01906538 0.18420668 0.25212014
+         0.060366035 0.08803416 0.005721473 0.03548798 0.17484868 0.045632493
+         0.03855448 0.0031268573)
+       #(0.07758663559857257d0 0.08878211431438537d0 0.10551577674479538d0
+         0.05869010967361182d0 0.05507325082290451d0 0.07511676066651246d0
+         0.06875969568617234d0 0.07264544881317599d0 0.03029369374727558d0
+         0.04594328416741256d0 0.1171034605055713d0 0.10565672322170046d0
+         0.06781795770483026d0 0.031015088333079505d0)
+       #(0.15577507  0.03496241  0.17293515  0.02836921  0.09693498
+         0.12585869  0.06974428  0.04656888  0.01267463  0.01457374
+         0.10987419  0.03547976  0.08083613  0.0154129))
+ :title-list '("Mean Decrease Accuray (cl-random-forest)"
+               "Mean Decrease Entropy (cl-random-forest)"
+               "Mean Decrease Gini (scikit-learn)")
+ :y-label "Importance"
+ :output "/home/wiz/tmp/adult-feature-importance.png")
+ ```
+
+clgplotは/tmp以下にgnuplotのデータファイル`/tmp/clgplot-tmp.dat.X`とスクリプトファイル`/tmp/clgplot-tmp.gp`を生成する。
+
+```gnuplot
+set term png
+set output "/home/wiz/tmp/adult-feature-importance.png"
+set ylabel "Importance"
+set xrange [] 
+set yrange [] 
+set size ratio 1.0
+set xtics rotate by 90 offset 0,-6
+set xtics ('age' 0, 'workclass' 1, 'fnlwgt' 2, 'education' 3, 'education-num' 4, 'marital-status' 5, 'occupation' 6, 'relationship' 7, 'race' 8, 'sex' 9, 'capital-gain' 10, 'capital-loss' 11, 'hours-per-week' 12, 'native-country' 13)
+set bmargin 7
+plot "/tmp/clgplot-tmp.dat.0" using 1:2 with lines title "Mean Decrease Accuray (clrf)" axis x1y1, \
+     "/tmp/clgplot-tmp.dat.1" using 1:2 with lines title "Mean Decrease Entropy (clrf)" axis x1y1, \
+     "/tmp/clgplot-tmp.dat.2" using 1:2 with lines title "Mean Decrease Gini (sklearn)" axis x1y1
+```
+
+生成された.gpファイルに`xtics`と`bmargin`の設定を手動で加えた。まずbmarginでグラフの下に空間を作る。xticsでX軸の目盛りに文字列を付けることができる。ここで文字列が横書きだと全部オーバーラップしてしまって読めないので、反時計周りに90度傾けるように`xtics rotate by 90`を指定した。さらに、このままだとグラフにめり込むので、文字列の開始位置を下にずらすように`xtics rotate by 90 offset 0,-6`とした。
