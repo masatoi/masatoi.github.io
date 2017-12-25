@@ -133,7 +133,7 @@ MitoはMySQL、PostgreSQL、SQLite3に対応しているのでこれだけでも
 テーブルはメタオブジェクトプロトコル(MOP)によって拡張されたクラスによって定義する。
 けっこう書く量が多かったので、カラムと型の対応を並べるだけでテーブルを定義できるように`deftable`というマクロを定義した。
 
-カラムの型には、`:text`や`:integer`といったデータ型の他に、deftableで定義した他のクラスも指定することができる。あと特に何も指定していなくても`:id`と`:created-at`と`:updated-at`の3つのカラムは自動的に追加され、:idが主キーになる。主キーは指定することもできるが、複合主キーは指定できないようだ。この時点で指定のテーブル構造とは微妙に異なるようになるが気にしないことにする。
+カラムの型には、`:text`や`:integer`といったデータ型の他に、deftableで定義した他のクラスも指定することができる。あと特に何も指定していなくても`:id`と`:created-at`と`:updated-at`の3つのカラムは自動的に追加され、:idが主キーになる。主キーは指定することもできるが、複合主キーは指定できないようだ。この時点でsituated-program-challenge指定のテーブル構造とは微妙に異なるが気にしないことにする。
 ```common_lisp
 (defmacro deftable (table-name superclass-list &body column-type-pairs)
   `(defclass ,table-name (,@superclass-list)
