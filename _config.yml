@@ -27,7 +27,7 @@ author :
 #
 production_url : http://masatoi.github.io
 
-gems: ["jekyll-sitemap"]
+gems: ["jekyll-sitemap", "jekyll-auto-image"]
 
 # All Jekyll-Bootstrap specific configurations are namespaced into this hash
 #
