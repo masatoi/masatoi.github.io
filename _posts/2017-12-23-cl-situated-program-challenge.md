@@ -34,7 +34,8 @@ tags: [lisp]
 
 ### 使ったライブラリ
 
-- HTTPサーバ: [woo](https://github.com/fukamachi/woo){:target="_blank"}
+- 処理系管理など: [roswell](https://github.com/roswell/roswell){:target="_blank"}
+- HTTPサーバ: [woo](https://github.com/fukamachi/woo)
 - Webアプリケーションフレームワーク: [clack](https://github.com/fukamachi/clack){:target="_blank"} + [ningle](https://github.com/fukamachi/ningle){:target="_blank"}
 - ORマッパー: [mito](https://github.com/fukamachi/mito){:target="_blank"}
 - HTTPクライアント: [dexador](https://github.com/fukamachi/dexador){:target="_blank"}
