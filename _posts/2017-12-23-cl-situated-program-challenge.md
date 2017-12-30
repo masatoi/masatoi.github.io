@@ -16,10 +16,10 @@ tags: [lisp]
 
 最近、中野を拠点としたClojureのミートアップイベント[clj-nakano](https://clj-nakano.connpass.com/){:target="_blank"}が誕生し、これまでに二回開催されている。
 
-先日自分も参加してきたのだが、その中で主催者の中村さんから[Rich Hickeyの講演内容を紹介する発表](https://gitpitch.com/clj-nakano/effective-programs-ja#/){:target="_blank"}があり、そこでの彼の主張は「継続的に動き続けるプログラムで、現実世界の変化に対応して変化していかなければならないプログラムを書くにあたって、静的型付けだと問題が多い」というものだった。
+先日自分も参加してきたが、その中で主催者の中村さんから[Rich Hickeyの講演内容を紹介する発表](https://gitpitch.com/clj-nakano/effective-programs-ja#/){:target="_blank"}があった。そこでの彼(RH)の主張は「長期間、継続的に動き続けるプログラムで、現実世界の変化に対応して変化し続けていかなければならないようなプログラムでは、静的型付け言語で書くと問題が多く発生する」というものだった。
 
-そこで本当にそう言えるのかを実験するために、[situated-program-challenge](https://github.com/clj-nakano/situated-program-challenge){:target="_blank"}と題してREST APIを実装する課題が提案された。
-これはミートアップイベントの管理をするシステムで、実装後にAPIやDBのテーブル構造などに変更が加えられることを想定してバージョン1と2を作り、その変更に要する労力がいかほどかを言語ごとに比較するのが目的だ。
+そこで、本当にそう言えるのかを検証するために、[situated-program-challenge](https://github.com/clj-nakano/situated-program-challenge){:target="_blank"}と題してREST APIを実装する課題が中村さんから提案された。
+これはミートアップイベントの管理をするシステムで、与えられた仕様をもとにバージョン1を実装後、APIやDBのテーブル構造などに変更が加えられ、それに対応するバージョン2を作る。その変更に要した労力がどれくらいだったかを言語ごとに比較するのが目的だ。
 
 前回のclj-nakanoでは、
 
@@ -28,7 +28,7 @@ tags: [lisp]
 
 が紹介された。他の言語でも[situated-program-challengeのレポジトリ](https://github.com/clj-nakano/situated-program-challenge){:target="_blank"}からフォークすることで参加できる。
 
-今回はこれをCommon Lispでやってみる。とりあえずバージョン1のRESTサーバを作るところまでやってみた。
+今回はこれをCommon Lispでやってみることにした。とりあえずバージョン1のRESTサーバを作るところまでやってみたものが以下のレポジトリになる。
 
 - [Common Lispによるバージョン1の実装 (masatoi)](https://github.com/masatoi/situated-program-challenge/tree/cl-version1){:target="_blank"}
 
@@ -40,10 +40,12 @@ tags: [lisp]
 - HTTPクライアント: [dexador](https://github.com/fukamachi/dexador){:target="_blank"}
 - JSONライブラリ: [jonathan](https://github.com/Rudolph-Miller/jonathan){:target="_blank"}
 
-### NingleでJSONの受け渡しをするAPIのエントリポイントを作る
+ほぼShibuya.lispに来ているメンバー(主に深町さん)のプロダクトで出来ている。
+
+### NingleでJSONの受け渡しをするAPIのエンドポイントを作る
 
 NingleはごくシンプルなWebアプリケーションフレームワークで、URLとLisp関数を結び付ける役割を果たす。
-まず準備として、ningleアプリケーションのインスタンスを生成し、サーバの起動/停止を行なう関数や、URLとLisp関数の対応付けを行うマクロ`defroute`を定義しておく。
+まず準備として、ningleアプリケーションのインスタンスを生成し、サーバの起動/停止を行なう関数や、URLとLisp関数の対応付けをラップするマクロ`defroute`を定義しておく。
 
 ```common_lisp
 (defparameter *app* (make-instance 'ningle:<app>))
@@ -60,16 +62,18 @@ NingleはごくシンプルなWebアプリケーションフレームワーク�
 ;; サーバの停止
 (defun stop () (clack:stop *handler*))
 
-;; routeへ登録するためのマクロ
+;; *app*のルーティングテーブルに関数を登録するマクロ
 (defmacro defroute (name (params &rest route-args) &body body)
   `(setf (ningle:route *app* ,name ,@route-args)
          (lambda (,params)
            (declare (ignorable ,params))
            ,@body)))
 ```
-次に、APIのエントリポイントを定義する。defrouteの第一引数はエントリポイントのURLである。paramsには、URL内の`:member-id`や`:event-id`に対応する値と、HTTPクライアントから渡されるJSONデータをパースしたものが連想リストとして入る。さらに、実際にHTTPクライアントであるdexadorを使ってJSONデータをPOSTメソッドで送信してみる。
+次にREST APIのエンドポイントを定義する。defrouteの第一引数はエンドポイントのURLであり、URL内にパラメータを含むことができる。仮引数のparamsには、URL内のパラメータ`:member-id`や`:event-id`に対応する値と、HTTPクライアントから渡されるJSONデータをパースした値が連想リストとして入っている。
+
+試しにHTTPクライアントdexadorを使ってJSONデータをPOSTメソッドで送信してみると、defrouteのparamsの値がURLとJSONデータのパラメータの連想リストになっていることが分かる。
 ```common_lisp
-;; エントリポイントの定義
+;; エンドポイントの定義
 (defroute "/members/:member-id/meetups/:event-id" (params :method :POST)
   (print params)
   '(200 (:content-type "application/json")
@@ -87,7 +91,9 @@ NingleはごくシンプルなWebアプリケーションフレームワーク�
 ;; 200              ← 返り値2: HTTPステータス
 ;; (それ以降の返り値は省略)
 ```
-以下のようなマクロ`with-protect-to-json`を定義しておけば、本体部分で属性リストを返すとJSONに変換してステータス番号と一緒にクライアントに送ってくれる。何かエラーが発生したときにはそのエラーメッセージを送る。こういう毎回似たようなパターンが現われるようなものはマクロとしてくくり出しておくと便利だ。
+以下のようなマクロ`with-protect-to-json`を定義しておけば、本体部分で属性リストを返すとJSONに変換してステータス番号と一緒にクライアントに送ってくれる。また、何かエラーが発生したときにはその例外のエラーメッセージをクライアントに送る。このような毎回似たようなパターンが繰り返し現われるような構文はマクロとしてくくり出しておくと便利だ。
+
+試しに割り算を行うエンドポイントを作って、ゼロ除算で例外を起こさせてみる。
 ```common_lisp
 (defmacro with-protect-to-json (&body body)
   `(handler-case
@@ -100,6 +106,7 @@ NingleはごくシンプルなWebアプリケーションフレームワーク�
 (defun asc (key alist)
   (cdr (assoc key alist :test #'string=)))
 
+;; URLパラメータの割り算をする
 (defroute "/numerator/:numer/denominator/:denom" (params :method :GET)
   (with-protect-to-json
     (list :answer (/ (parse-integer (asc :numer params))
@@ -120,7 +127,7 @@ NingleはごくシンプルなWebアプリケーションフレームワーク�
 ```
 
 ### ORマッパーMitoでDBへのアクセス
-situated-program-challengeではPostgreSQLを使う。Common Lispには昔からPostgreSQL向けのPostmodernというORマッパーがあるが、[Shibuya.lispで以前深町さんがMitoという新しいORマッパーの発表をされていた](https://www.slideshare.net/fukamachi/mito-a-successor-of-integral){:target="_blank"}のを思い出したので使ってみることにした。
+situated-program-challengeではPostgreSQLを使うとのこと。Common Lispには昔からPostgreSQL向けのPostmodernというORマッパーがあるが、[Shibuya.lispで以前深町さんがMitoという新しいORマッパーの発表をされていた](https://www.slideshare.net/fukamachi/mito-a-successor-of-integral){:target="_blank"}のを思い出したので使ってみることにした。
 
 MitoはMySQL、PostgreSQL、SQLite3に対応しているのでこれだけでも使う理由になる。
 
@@ -130,10 +137,10 @@ MitoはMySQL、PostgreSQL、SQLite3に対応しているのでこれだけでも
   (mito:connect-toplevel :postgres :database-name "meetup" :username "meetup" :password "password123"))
 ```
 #### テーブル定義
-テーブルはメタオブジェクトプロトコル(MOP)によって拡張されたクラスによって定義する。
+テーブルはメタオブジェクトプロトコル(MOP)で拡張されたクラスによって定義する。
 けっこう書く量が多かったので、カラムと型の対応を並べるだけでテーブルを定義できるように`deftable`というマクロを定義した。
 
-カラムの型には、`:text`や`:integer`といったデータ型の他に、deftableで定義した他のクラスも指定することができる。あと特に何も指定していなくても`:id`と`:created-at`と`:updated-at`の3つのカラムは自動的に追加され、:idが主キーになる。主キーは指定することもできるが、複合主キーは指定できないようだ。この時点でsituated-program-challenge指定のテーブル構造とは微妙に異なるが気にしないことにする。
+カラムの型には、`:text`や`:integer`といったデータ型の他に、deftableで定義した他のクラスも指定することができる。あと特に何も指定していなくても`id`と`created-at`と`updated-at`の3つのカラムが自動的に追加され、idが主キーになる。主キーは陽に指定することもできるが、複合主キーは指定できないようだ。この時点でsituated-program-challenge指定のテーブル構造とは微妙に異なるがあまり気にしないことにする。
 ```common_lisp
 (defmacro deftable (table-name superclass-list &body column-type-pairs)
   `(defclass ,table-name (,@superclass-list)
@@ -161,7 +168,7 @@ MitoはMySQL、PostgreSQL、SQLite3に対応しているのでこれだけでも
 (deftable groups-members ()
   (group-ref  groups)
   (member-ref members)
-  (admin  :boolean))
+  (admin      :boolean))
 
 (deftable meetups ()
   (title    :text)
@@ -185,6 +192,7 @@ MitoはMySQL、PostgreSQL、SQLite3に対応しているのでこれだけでも
 ```
 
 #### テーブル生成
+`mito:table-definition`でテーブルを生成するSQLを確認することができ、`mito:execute-sql`でそのSQLを実際に実行することができる。上で定義したテーブルをまとめて生成するには、
 ```common_lisp
 (defparameter *table-list*
   '(groups groups-members meetups meetups-members members venues))
@@ -195,7 +203,7 @@ MitoはMySQL、PostgreSQL、SQLite3に対応しているのでこれだけでも
 ```
 
 #### データの取得/登録
-テーブルに対応するクラスから生成したインスタンスがデータアクセスオブジェクト(DAO)になる。`mito:find-dao`や`mito:select-dao`でDBからDAOを取得できる。
+テーブルに対応するクラスから生成したインスタンスがそのテーブルのデータアクセスオブジェクト(DAO)になる。`mito:find-dao`や`mito:select-dao`でDBからDAOを取得できる。
 ```common_lisp
 ;; IDで取得
 (mito:find-dao 'members :id 1)
@@ -222,7 +230,8 @@ MitoはMySQL、PostgreSQL、SQLite3に対応しているのでこれだけでも
 ```
 
 ##### 関係テーブルのDAOから参照しているテーブルのDAOをまとめて取得する
-SQLでやるときはJOINでテーブルを結合してからSELECTするのだと思うのだが、Mitoでは関係テーブルのクラスでSELECTするときに参照するクラスを指定することで、参照先のDAOもまとめて取得することができる。
+レコードIDなどを介して複数のテーブル間の対応関係を取っているようなテーブルがある。
+SQLでやるときはJOINでテーブルを結合してからSELECTするのだと思うのだが、Mitoでは関係テーブルのクラスでSELECTするときに参照するクラスを指定することで、参照先のDAOもまとめて取得することができる。こうすることで一回のSELECTで複数のテーブルのDAOを取ってくることができる。
 
 例えば、上で定義したgroups-membersクラスはカラムの型としてgroupsクラスとmembersクラスを指定した。groups-membersクラスに対してselect-daoし、その要素をdescribeしてみるとgroup-refとmember-refスロットは空である。
 
