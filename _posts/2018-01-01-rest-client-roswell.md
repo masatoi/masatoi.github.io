@@ -124,7 +124,7 @@ exec ros -Q -- $0 "$@"
 $ time ./client.ros http://localhost:5000/members/1 get
 {"member-id":1,"first-name":"Satoshi","last-name":"Imai","email":"satoshi.imai@gmail.com"}
 200
-0.928 secs
+0.881 secs
 ```
 
 `ros build`することでロード済みのメモリイメージをダンプでき、clientという実行ファイルができる。
@@ -139,7 +139,7 @@ ros build client.ros
 $ time ./client http://localhost:5000/members/1 get
 {"member-id":1,"first-name":"Satoshi","last-name":"Imai","email":"satoshi.imai@gmail.com"}
 200
-0.258 secs
+0.210 secs
 ```
 
 [ros buildにはいろいろオプションがあって](https://github.com/roswell/roswell/wiki/Building-images-and-executables){:target="_blank"}、例えばイメージの圧縮を切ったりもできる。
@@ -148,12 +148,16 @@ $ time ./client http://localhost:5000/members/1 get
 ros build client.ros --disable-compression
 ```
 
-実行ファイルのサイズは65Mくらいになった。これを実行してみるとさらに速くなる。
+実行ファイルのサイズは65Mくらいになった。これを実行してみるとさらに速くなる。(curlよりは遅いが・・・)
 
 ```
 $ time ./client http://localhost:5000/members/1 get
 {"member-id":1,"first-name":"Satoshi","last-name":"Imai","email":"satoshi.imai@gmail.com"}
 200
-0.078 secs
+0.045 secs
+
+$ time curl http://localhost:5000/members/1
+{"member-id":1,"first-name":"Satoshi","last-name":"Imai","email":"satoshi.imai@gmail.com"}
+0.020 secs
 ```
 rosスクリプト自体はただのテキストファイルなので数KBしかなく、それほどスピードを必要としないならビルドは必要ないと思うが、ビルドするとそのファイル単体で実行できるのでLisp処理系やライブラリをインストールする必要がなく、配布するにはいいと思う。使い分けていこう。
