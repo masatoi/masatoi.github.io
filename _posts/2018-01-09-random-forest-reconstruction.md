@@ -104,7 +104,7 @@ tags: [lisp, machine-learning]
 ;; 葉ノードのインデックスのベクトルとしてエンコード
 (defparameter index-datum (encode-datum mnist-forest mnist-datamatrix 0))
 ;; デコード
-(decode-datum mnist-forest index-datum)
+(defparameter *reconstruction2* (decode-datum mnist-forest index-datum))
 ```
 この\*reconstruction*に再構成した結果が入っている。`make-forest`のオプションを色々変えてプロットしてみると以下のようになる。
 
@@ -126,5 +126,5 @@ cl-random-forestでランダムフォレストを学習するときは、ラン�
 ### 感想
 - 実装は簡単だったし勉強になった気がする
 - データに対応する葉ノードのインデックスのベクトルを新たな特徴量とするという部分は前に実装したGlobal Refinement of Random Forestとまったく同じだなと思った
-- オートエンコーダとして役に立つかは未知数
+- オートエンコーダとして役に立つかは未知数(ノイズには強いらしい)
 - 次はDeepForestを実装する(予定)
