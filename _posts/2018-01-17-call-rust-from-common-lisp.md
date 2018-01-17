@@ -29,7 +29,7 @@ pub extern fn fib(n: u32) -> u32 {
 
 次のようにビルドすると、`libfib.so`ファイルができる。
 ```
-rustc --crate-type="dylib" fib.rs
+rustc --crate-type="dylib" -C opt-level=3 fib.rs
 ```
 
 ### Common Lisp側から呼び出す
@@ -75,4 +75,25 @@ rustc --crate-type="dylib" fib.rs
 ;;   0 bytes consed
   
 ;; => 102334155
+```
+
+### Rustの最適化オプションを有効化してみる
+
+Rustにも最適化オプションがあるらしい
+
+- [君のRustは20倍遅い - 簡潔なQ](http://qnighy.hatenablog.com/entry/2017/05/02/070000){:target="_blank"}
+
+```
+rustc --crate-type="dylib" -C opt-level=3 fib.rs
+```
+
+として上と同様の手順を踏んでみると、最適化ありのCommon Lisp版より速くなった。
+```common_lisp
+(time (fib 40))
+;; Evaluation took:
+;;   0.708 seconds of real time
+;;   0.712000 seconds of total run time (0.712000 user, 0.000000 system)
+;;   100.56% CPU
+;;   2,404,129,682 processor cycles
+;;   0 bytes consed
 ```
