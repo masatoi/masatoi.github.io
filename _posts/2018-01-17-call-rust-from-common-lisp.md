@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "メモ: Common LispからRustを呼び出す"
+title: "メモ: Common LispからRust/Goを呼び出す"
 description: ""
 category: 
 tags: [lisp]
@@ -77,7 +77,7 @@ rustc --crate-type="dylib" -C opt-level=3 fib.rs
 ;; => 102334155
 ```
 
-### Rustの最適化オプションを有効化してみる
+### 追記: Rustの最適化オプションを有効化してみる
 
 Rustにも最適化オプションがあるらしい
 
@@ -97,3 +97,52 @@ rustc --crate-type="dylib" -C opt-level=3 fib.rs
 ;;   2,404,129,682 processor cycles
 ;;   0 bytes consed
 ```
+
+### 追記2: Goでもやってみる
+
+GoにもCの共有ライブラリを出力できるビルドオプションがあるらしい
+
+- [Golang で Shared Library を出力する。](https://qiita.com/yanolab/items/1e0dd7fd27f19f697285){:target="_blank"}
+
+`libgofib.go`
+```golang
+package main
+
+import (
+    "C"
+    "log"
+)
+
+//export fib
+func fib(n int) int {
+    if (n < 2) { return n }
+    return fib(n - 2) + fib(n - 1)
+}
+
+func init() {
+    log.Println("Loaded!!")
+}
+
+func main() {
+}
+```
+これを以下のようにビルドする。
+```
+go build -buildmode=c-shared -o libgofib.so libgofib.go
+```
+Common Lispから呼び出す。
+```common_lisp
+(cffi:load-foreign-library "/home/wiz/program/golang/libgofib.so")
+(cffi:defcfun "fib" :int (n :int))
+(time (fib 40))
+
+;; Evaluation took:
+;;   0.733 seconds of real time
+;;   0.736000 seconds of total run time (0.736000 user, 0.000000 system)
+;;   100.41% CPU
+;;   2,485,210,416 processor cycles
+;;   0 bytes consed
+```
+
+### 感想
+簡単なC-APIを書けるだけのRust/Go力があればそのコード資産に簡単にアクセスできるというのは非常にうれしい
