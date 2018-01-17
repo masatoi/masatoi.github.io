@@ -29,7 +29,7 @@ pub extern fn fib(n: u32) -> u32 {
 
 次のようにビルドすると、`libfib.so`ファイルができる。
 ```
-rustc --crate-type="dylib" -C opt-level=3 fib.rs
+rustc --crate-type="dylib" fib.rs
 ```
 
 ### Common Lisp側から呼び出す
