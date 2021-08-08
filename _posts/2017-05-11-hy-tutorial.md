@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "ゼロから始めるHy(hylang)"
+title: "ゼロから始めるHy (hylang)"
 description: ""
 category: 
 tags: [lisp,hylang,python]
@@ -10,28 +10,69 @@ tags: [lisp,hylang,python]
 * TOC
 {:toc}
 
-# Hy(hylang)について
+# Hyについて
 
 -   [hylang/hy: A dialect of Lisp that's embedded in Python](https://github.com/hylang/hy){:target="_blank"}
--   [ドキュメント: Hy's documentation](http://docs.hylang.org/en/latest/){:target="_blank"}
+-   [ドキュメント: Hy's documentation](http://docs.hylang.org/en/stable/index.html){:target="_blank"}
 
-HyはPythonのVM上で動くLisp方言で、Clojureによく似た構文を持つ。他のLispと同様にREPLでのインタラクティブな開発ができる。Lispなので本物のマクロが使える。
+Hy(hylang)はPythonのVM上で動くLisp方言で、一見Clojureによく似た構文を持つ。他のLisp系言語と同様にREPLでのインタラクティブな開発ができ、マクロを使って構文を拡張できる。
 
 Pythonと高度な互換性がある。HyからPythonを呼ぶこともPythonからHyを呼ぶこともできる。
 
-構文解析のオーバーヘッドが多少重いものの、Pythonのバイトコードへのコンパイラが付属しているので実用的には問題ない。またHyからPythonのソースコードへのトランスパイラも付属している。現状だとgensymの生成するシンボルをPythonのシンボルに変換できていないのでgensymを使うマクロがあるとエラーになってしまう。
+Pythonのバイトコードへのコンパイラと、HyからPythonのソースコードへのトランスパイラが付属している。
 
-# Hyのインストール
-~~Python2でも3でも動くようだが、Python3の方がサポートされている機能が多い。~~
-最新版のHyではPython3.3以降のみがサポートされる。自分は[pyenv](https://github.com/pyenv/pyenv){:target="_blank"}で最新のPython3.6.0をインストールした。それから以下のようにするとGithub上のHyの最新版がインストールできる。
+# インストール
+
+## Hyのインストール
+
+Hyの現行のリリースバージョンは0.14.0である。Pythonのバージョンは3系が推奨されている。2系でも使えるが機能は限られる。Hy自体のインストールは以下のようにする。
 
 ```
-pip install git+https://github.com/hylang/hy.git
+$ pip install hy
 ```
+これでhyコマンド、hycコマンド、hy2pyコマンドがインストールされる。
+Hyのバージョンを確認する。
+```
+$ hy -v
+hy 0.14.0
+```
+以降は単にhyコマンドを打ち込めばREPLが起動する。終了時にはREPLに`(quit)`と打ち込む。
 
-## Emacsのhy-mode
+### Hello, world
 
-簡易的なものだが、[Emacs用のhy-modeが用意されている](https://github.com/hylang/hy-mode){:target="_blank"}。MELPAから入るので、.emacsにpackage-install用の設定を書いて、
+次に、`hello.hy`というファイルに以下のように書いてみよう。
+
+```clojure
+(print "Hello, world!")
+```
+この.hy拡張子のファイルをhyコマンドの引数として与えれば、そのファイルを実行する。
+```
+$ hy hello.hy
+Hello, world!
+```
+次に、Pythonのバイトコードへコンパイルする。これにはhycコマンドを使う。
+```
+$ hyc hello.hy
+Compiling hello.hy
+```
+これを実行すると、hello.hyと同じディレクトリに`__pycache__`というディレクトリが出来ている。この中にバイトコンパイルに使用したPythonの実装に対するバイトコードが入っているので、それをpythonコマンドで実行する。
+```
+$ python __pycache__/hello.cpython-36.pyc 
+Hello, wold!
+```
+HyからPythonへのトランスパイルには、hy2pyコマンドを使う。
+```
+$ hy2py hello.hy
+print('Hello, wold!')
+```
+ただし現状gensymを使うマクロがあったりするとエラーになってしまう模様。
+`--spy`オプションを付けてhyを起動すると、式の評価と同時にhy2pyの結果がプリントされる。
+
+## Emacsのhy-modeのインストール
+
+- [hy-mode](https://github.com/hylang/hy-mode){:target="_blank"}
+
+簡易的なものだが、。MELPAから入るので、.emacsにpackage-install用の設定を書いて、
 ``` elisp
 (require 'package)
 (add-to-list 'package-archives 
