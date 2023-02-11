@@ -3,9 +3,11 @@ layout: post
 title: "メモ: ruby-buildがシンタックスエラーで失敗する"
 description: ""
 category: 
-tags: [memo, ruby]
+tags: [memo,ruby]
 ---
 {% include JB/setup %}
+
+# メモ: ruby-buildがシンタックスエラーで失敗する
 
 Ubuntu 22.04上でrbenvでRuby3系をインストールしようとしたらruby-buildがシンタックスエラーで失敗してハマった。
 
@@ -46,6 +48,7 @@ Rubyのソースに手を入れる必要があるように見える。
 rbenvとruby-buildが別リポジトリになってて何故？と思ったが、rbenvはruby環境の切り替えがメインの仕事で、ビルドは手動でやって `~/.rbenv/versions` に置くというのでもいいらしい。
 
 ソースをダウンロードしてきて `template/fake.rb.in` を直してビルドする。
+
 ```
 sudo apt install autoconf bison patch build-essential rustc libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libgmp-dev libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev uuid-dev
 
