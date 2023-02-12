@@ -3,7 +3,7 @@ layout: post
 title: "メモ: ruby-buildがシンタックスエラーで失敗する"
 description: ""
 category: 
-tags: [memo,ruby]
+tags: [misc]
 ---
 {% include JB/setup %}
 
