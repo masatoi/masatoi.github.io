@@ -28,7 +28,7 @@ author :
 url : https://masatoi.github.io
 production_url : https://masatoi.github.io
 
-plugins: ["jekyll-sitemap"]
+plugins: ["jekyll-sitemap", "jekyll-seo-tag"]
 
 # All Jekyll-Bootstrap specific configurations are namespaced into this hash
 #
