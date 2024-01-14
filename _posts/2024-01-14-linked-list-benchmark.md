@@ -18,7 +18,7 @@ tags: [lisp]
 - AMD Ryzen 7 5800X 8-Core Processor
 - Linux prime 5.15.0-91-generic #101-Ubuntu SMP x86_64 GNU/Linux
 
-100万件のデータにランダムな位置に1億回アクセスする時間を測る。
+100万件のデータのランダムな位置に1億回アクセスする時間を測る。
 
 ## 連結リスト
 
@@ -135,7 +135,8 @@ tags: [lisp]
 # 他の処理系では？
 
 ## CLISP (GNU CLISP 2.49.93+)
-CLISPだと予想通りになっている
+CLISPだと予想通りになっている。
+リストのランダムアクセスは遅すぎて1億回もアクセスしていたら終わらないため1000回にしてある。
 
 ```
 CL-USER> (defparameter lst (loop for i from 1 to 1000000 collect i))
@@ -168,6 +169,7 @@ NIL
 ```
 
 ## Clozure CL (Version 1.12.2 (v1.12.2) LinuxX8664)
+Clozure CLでもCLISPと同様の結果になった。
 
 ```
 CL-USER> (time
