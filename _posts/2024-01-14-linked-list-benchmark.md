@@ -193,7 +193,6 @@ took 19 microseconds (0.000019 seconds) to run.
 During that period, and with 16 available CPU cores,
      25 microseconds (0.000025 seconds) were spent in user mode
       0 microseconds (0.000000 seconds) were spent in system mode
-|#
 ```
 
 なのでSBCLが何か特殊なことをやっているのだと予想される。内部的には単純な連結リストではない？
