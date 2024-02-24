@@ -51,7 +51,27 @@ Common Lispのシンボルが実はリッチなデータ構造で、属性リス
           (print "bark")))
 
 (behave 'dog)
-; "bark"
+;; "bark"
+
+(setf (get 'dog 'height) 30)
+
+(inspect 'dog)
+
+#|
+The object is a SYMBOL.
+0. Name: "DOG"
+1. Package: #<PACKAGE "COMMON-LISP-USER">
+2. Value: #<unbound slot>
+3. Function: #<unbound slot>
+4. Plist: (HEIGHT 30 BEHAVIOR #<FUNCTION (LAMBDA ()) {54CEF72B}>)
+> 4
+
+The object is a proper list of length 4.
+0. 0: HEIGHT
+1. 1: 30
+2. 2: BEHAVIOR
+3. 3: #<FUNCTION (LAMBDA ()) {54CEF72B}>
+|#
 ```
 
 ### レキシカルスコープとダイナミックスコープ
