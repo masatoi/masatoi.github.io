@@ -252,3 +252,33 @@ clispのインタプリタで明示的にコンパイルする例を示した。
 
 ## 3章 関数的プログラミング
 
+関数的プログラミングとは、副作用を使わず、参照透明にしておくこと。(参照透明: 内部状態を持たず、同じ引数に対して常に返値を返すこと)
+このようになっていると関数単位でテスト、デバッグがしやすい。REPL上でのインタラクティブな開発とも相性がよい。
+
+副作用を使う例:
+
+```lisp
+;; 悪いポイント: 値を返さない。副作用のみを目的にしている
+(defun bad-reverse (lst)
+  (declare (optimize speed))
+  (let* ((len (length lst))
+         (ilimit (truncate (/ len 2))))
+    (do ((i 0 (1+ i))
+         (j (1- len) (1- j)))
+        ((>= i ilimit))
+      (rotatef (nth i lst) (nth j lst)))))
+
+(setf lst '(a b c))
+(bad-reverse lst)
+; => NIL
+
+lst ; => (C B A)
+```
+rotatefはsetfのように汎変数を受け取って、リスト要素のポインタ操作によって要素の置き換えを実現する。
+そのためコンシングは発生しないが、リストは破壊的に変更される。
+```lisp
+(time (rotatef (car lst) (caddr lst)))
+;  0 bytes consed
+
+lst ; => (A B C)
+```
