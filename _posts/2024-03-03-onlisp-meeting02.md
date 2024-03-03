@@ -197,3 +197,46 @@ SBCLの場合は `(proclaim '(optimize speed))` などはしなくても末尾�
                 (list pivot)
                 (quicksort (remove-if-not (lambda (x) (> x pivot)) rest))))))
 ```
+
+ここで最適化オプションの話が出てきており、1からnまでの整数の和を返す関数triangleの例が出てくる。
+
+10億までの総和にすると10倍くらいの違いが出てくる。
+
+```
+(defun triangle (n)
+  (labels ((tri (c n)
+             (declare (optimize (speed 3) (safety 0))
+                      (type fixnum n c))
+             (if (zerop n)
+                 c
+                 (tri (the fixnum (+ n c))
+                      (the fixnum (- n 1))))))
+    (tri 0 n)))
+
+(time (triangle 1000000000))
+
+; Evaluation took:
+;  0.252 seconds of real time
+;  0.251020 seconds of total run time (0.251020 user, 0.000000 system)
+;  99.60% CPU
+;  953,885,348 processor cycles
+;  0 bytes consed
+
+(defun triangle-no-optimize (n)
+  (labels ((tri (c n)
+             (if (zerop n)
+                 c
+                 (tri (+ n c)
+                      (- n 1)))))
+    (tri 0 n)))
+
+(time (triangle-no-optimize 1000000000))
+
+; Evaluation took:
+;  2.948 seconds of real time
+;  2.950525 seconds of total run time (2.950434 user, 0.000091 system)
+;  100.10% CPU
+;  11,212,179,642 processor cycles
+;  0 bytes consed
+```
+
