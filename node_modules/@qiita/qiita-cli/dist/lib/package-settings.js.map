@@ -1,0 +1,1 @@
+{"version":3,"file":"package-settings.js","sourceRoot":"","sources":["../../src/lib/package-settings.ts"],"names":[],"mappings":";;;AAAA,MAAM,eAAe,GAAG,OAAO,CAAC,oBAAoB,CAAC,CAAC;AAEzC,QAAA,eAAe,GAAG;IAC7B,IAAI,EAAE,eAAe,CAAC,IAAI;IAC1B,aAAa,EAAE,UAAU;IACzB,OAAO,EAAE,eAAe,CAAC,OAAO;CACjC,CAAC"}
